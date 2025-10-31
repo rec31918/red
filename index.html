@@ -1,0 +1,686 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Caregiver Schedule Calendar</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            /*background: linear-gradient(135deg, #e2e8f0 0%, #e2e8f0 100%);*/
+            padding: 20px;
+            min-height: 100vh;
+        }
+        
+        .container {
+            max-width: 1400px;
+            margin: 0 auto;
+            background: white;
+            border-radius: 20px;
+            padding: 40px;
+            box-shadow: 0 20px 60px rgba(0,0,0,0.3);
+        }
+        
+        .header {
+            text-align: center;
+            margin-bottom: 40px;
+            border-bottom: 4px solid #222324;
+            padding-bottom: 20px;
+        }
+        
+        .header h1 {
+            font-size: 2.5em;
+            color: #2d3748;
+            margin-bottom: 10px;
+        }
+        
+        .header p {
+            font-size: 1.2em;
+            color: #718096;
+        }
+        
+        .week-section {
+            margin-bottom: 50px;
+            page-break-inside: avoid;
+        }
+        
+        .week-header {
+            background: linear-gradient(135deg, #edf0f2 0%, #edf0f2 100%);
+            color: black;
+            border-bottom: 4px solid #edf0f2;
+            padding: 10px 15px;
+            border-radius: 10px;
+            margin-bottom: 20px;
+        }
+        
+        .week-header h2 {
+            font-size: 1.5em;
+        }
+        
+        .calendar-grid {
+            display: grid;
+            grid-template-columns: repeat(7, 1fr);
+            gap: 15px;
+            margin-bottom: 20px;
+        }
+        
+        .day-card {
+            /*background: #f7fafc;*/
+            border: 2px solid #edf0f2;
+            border-radius: 12px;
+            padding: 15px;
+            min-height: 180px;
+            transition: transform 0.2s, box-shadow 0.2s;
+        }
+        
+        .day-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 25px rgba(0,0,0,0.1);
+        }
+        
+        .day-header {
+            text-align: center;
+            margin-bottom: 15px;
+            padding-bottom: 10px;
+            border-bottom: 2px solid #cbd5e0;
+        }
+        
+        .day-name {
+            font-weight: bold;
+            color: #222324;
+            font-size: 1.1em;
+        }
+        
+        .day-date {
+            color: #718096;
+            font-size: 0.9em;
+            margin-top: 5px;
+        }
+        
+        .shift {
+            margin-bottom: 12px;
+            padding: 10px;
+            border-radius: 8px;
+            /*background: white;*/
+            border-left: 4px solid;
+        }
+        
+        .shift-label {
+            font-size: 0.75em;
+            font-weight: bold;
+            text-transform: uppercase;
+            color: #4a5568;
+            margin-bottom: 5px;
+        }
+        
+        .shift-name {
+            font-size: 1.1em;
+            font-weight: bold;
+        }
+        
+        /*.day-shift {
+            border-left-color: #f59e0b;
+            background: #fffbeb;
+        }
+        
+        .night-shift {
+            border-left-color: #6366f1;
+            background: #eef2ff;
+        }
+        
+        .day-shift .shift-name {
+            color: #d97706;
+        }
+        
+        .night-shift .shift-name {
+            color: #4f46e5;
+        }
+        
+        .legend {
+            display: flex;
+            justify-content: center;
+            gap: 30px;
+            margin-top: 40px;
+            padding: 20px;
+            background: #f7fafc;
+            border-radius: 10px;
+            flex-wrap: wrap;
+        }
+        
+        .legend-item {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+        
+        .legend-color {
+            width: 30px;
+            height: 30px;
+            border-radius: 6px;
+            border: 2px solid #e2e8f0;
+        }*/
+        
+        .color-dannie { background: #3b82f635; color: #3b82f6; }
+        .color-marie { background:#8b5cf635; color: #8b5cf6; }
+        .color-netsie { background: #6366f135; color: #6366f1; }
+        .color-sweta { background: #10b98135; color: #10b981; }
+        .color-hana { background: #ec489935; color: #ec4899; }
+        .color-nate { background: #f59e0b35; color: #f59e0b; }
+        .color-christine { background: #ef444435; color: #ef4444; }
+
+        .color-dannie-font { color: #3b82f6; }
+        .color-marie-font { color: #8b5cf6; }
+        .color-netsie-font { color: #6366f1; }
+        .color-sweta-font { color: #10b981; }
+        .color-hana-font { color: #ec4899; }
+        .color-nate-font { color: #f59e0b; }
+        .color-christine-font { color: #ef4444; }
+
+        
+      
+        @media (max-width: 1200px) {
+            .calendar-grid {
+                grid-template-columns: repeat(4, 1fr);
+            }
+        }
+        
+        @media (max-width: 768px) {
+            .calendar-grid {
+                grid-template-columns: repeat(2, 1fr);
+            }
+            
+            .container {
+                padding: 20px;
+            }
+            
+            .header h1 {
+                font-size: 1.8em;
+            }
+        }
+        
+        @media (max-width: 480px) {
+            .calendar-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+        
+       
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>❤️ Vicki's Care Schedule ❤️</h1>
+            <p>4-Week Rotation</p>
+        </div>
+
+        <!-- Week A -->
+        <div class="week-section">
+            <div class="week-header">
+                <h2>Week A | Nov 2nd - 8th</h2>
+            </div>
+            <div class="calendar-grid">
+                <div class="day-card">
+                    <div class="day-header">
+                        <div class="day-name">Sunday (11/2)</div>
+                    </div>
+                    <div class="shift day-shift color-dannie">
+                        <div class="shift-label">Day (8am-8pm)</div>
+                        <div class="shift-name color-dannie-font">Dannie</div>
+                    </div>
+                    <div class="shift night-shift color-marie">
+                        <div class="shift-label">Night (8pm-8am)</div>
+                        <div class="shift-name color-marie-font">Marie</div>
+                    </div>
+                </div>
+                
+                <div class="day-card">
+                    <div class="day-header">
+                        <div class="day-name">Monday</div>
+                    </div>
+                    <div class="shift day-shift color-dannie">
+                        <div class="shift-label">Day (8am-8pm)</div>
+                        <div class="shift-name color-dannie-font">Dannie</div>
+                    </div>
+                    <div class="shift night-shift color-marie">
+                        <div class="shift-label">Night (8pm-8am)</div>
+                        <div class="shift-name color-marie-font">Marie</div>
+                    </div>
+                </div>
+                
+                <div class="day-card">
+                    <div class="day-header">
+                        <div class="day-name">Tuesday</div>
+                    </div>
+                    <div class="shift day-shift color-dannie">
+                        <div class="shift-label">Day (8am-8pm)</div>
+                        <div class="shift-name color-dannie-font">Dannie</div>
+                    </div>
+                    <div class="shift night-shift color-marie">
+                        <div class="shift-label">Night (8pm-8am)</div>
+                        <div class="shift-name color-marie-font">Marie</div>
+                    </div>
+                </div>
+                
+                <div class="day-card">
+                    <div class="day-header">
+                        <div class="day-name">Wednesday</div>
+                    </div>
+                    <div class="shift day-shift color-dannie">
+                        <div class="shift-label">Day (8am-8pm)</div>
+                        <div class="shift-name color-dannie-font">Dannie</div>
+                    </div>
+                    <div class="shift night-shift color-marie">
+                        <div class="shift-label">Night (8pm-8am)</div>
+                        <div class="shift-name color-marie-font">Marie</div>
+                    </div>
+                </div>
+                
+                <div class="day-card">
+                    <div class="day-header">
+                        <div class="day-name">Thursday</div>
+                    </div>
+                    <div class="shift day-shift color-netsie">
+                        <div class="shift-label">Day (8am-8pm)</div>
+                        <div class="shift-name color-netsie-font">Netsie</div>
+                    </div>
+                    <div class="shift night-shift color-sweta">
+                        <div class="shift-label">Night (8pm-8am)</div>
+                        <div class="shift-name color-sweta-font">Sweta</div>
+                    </div>
+                </div>
+                
+                <div class="day-card">
+                    <div class="day-header">
+                        <div class="day-name">Friday</div>
+                    </div>
+                    <div class="shift day-shift color-dannie">
+                        <div class="shift-label">Day (8am-8pm)</div>
+                        <div class="shift-name color-dannie-font">Dannie</div>
+                    </div>
+                    <div class="shift night-shift color-hana">
+                        <div class="shift-label">Night (8pm-8am)</div>
+                        <div class="shift-name color-hana-font">Hana</div>
+                    </div>
+                </div>
+                
+                <div class="day-card">
+                    <div class="day-header">
+                        <div class="day-name">Saturday</div>
+                    </div>
+                    <div class="shift day-shift color-dannie">
+                        <div class="shift-label">Day (8am-8pm)</div>
+                        <div class="shift-name color-dannie-font">Dannie</div>
+                    </div>
+                    <div class="shift night-shift color-sweta">
+                        <div class="shift-label">Night (8pm-8am)</div>
+                        <div class="shift-name color-sweta-font">Sweta</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Week B -->
+        <div class="week-section">
+            <div class="week-header">
+                <h2>Week B | Nov 9th - 15th</h2>
+            </div>
+            <div class="calendar-grid">
+                <div class="day-card">
+                    <div class="day-header">
+                        <div class="day-name">Sunday</div>
+                    </div>
+                    <div class="shift day-shift color-dannie">
+                        <div class="shift-label">Day (8am-8pm)</div>
+                        <div class="shift-name color-dannie-font">Dannie</div>
+                    </div>
+                    <div class="shift night-shift color-nate">
+                        <div class="shift-label">Night (8pm-8am)</div>
+                        <div class="shift-name color-nate-font">Nate</div>
+                    </div>
+                </div>
+                
+                <div class="day-card">
+                    <div class="day-header">
+                        <div class="day-name">Monday</div>
+                    </div>
+                    <div class="shift day-shift color-dannie">
+                        <div class="shift-label">Day (8am-8pm)</div>
+                        <div class="shift-name color-dannie-font">Dannie</div>
+                    </div>
+                    <div class="shift night-shift color-marie">
+                        <div class="shift-label">Night (8pm-8am)</div>
+                        <div class="shift-name color-marie-font">Marie</div>
+                    </div>
+                </div>
+                
+                <div class="day-card">
+                    <div class="day-header">
+                        <div class="day-name">Tuesday</div>
+                    </div>
+                    <div class="shift day-shift color-dannie">
+                        <div class="shift-label">Day (8am-8pm)</div>
+                        <div class="shift-name color-dannie-font">Dannie</div>
+                    </div>
+                    <div class="shift night-shift color-marie">
+                        <div class="shift-label">Night (8pm-8am)</div>
+                        <div class="shift-name color-marie-font">Marie</div>
+                    </div>
+                </div>
+                
+                <div class="day-card">
+                    <div class="day-header">
+                        <div class="day-name">Wednesday</div>
+                    </div>
+                    <div class="shift day-shift color-dannie">
+                        <div class="shift-label">Day (8am-8pm)</div>
+                        <div class="shift-name color-dannie-font">Dannie</div>
+                    </div>
+                    <div class="shift night-shift color-marie">
+                        <div class="shift-label">Night (8pm-8am)</div>
+                        <div class="shift-name color-marie-font">Marie</div>
+                    </div>
+                </div>
+                
+                <div class="day-card">
+                    <div class="day-header">
+                        <div class="day-name">Thursday</div>
+                    </div>
+                    <div class="shift day-shift color-netsie">
+                        <div class="shift-label">Day (8am-8pm)</div>
+                        <div class="shift-name color-netsie-font">Netsie</div>
+                    </div>
+                    <div class="shift night-shift color-sweta">
+                        <div class="shift-label">Night (8pm-8am)</div>
+                        <div class="shift-name color-sweta-font">Sweta</div>
+                    </div>
+                </div>
+                
+                <div class="day-card">
+                    <div class="day-header">
+                        <div class="day-name">Friday</div>
+                    </div>
+                    <div class="shift day-shift color-dannie">
+                        <div class="shift-label">Day (8am-8pm)</div>
+                        <div class="shift-name color-dannie-font">Dannie</div>
+                    </div>
+                    <div class="shift night-shift color-hana">
+                        <div class="shift-label">Night (8pm-8am)</div>
+                        <div class="shift-name color-hana-font">Hana</div>
+                    </div>
+                </div>
+                
+                <div class="day-card">
+                    <div class="day-header">
+                        <div class="day-name">Saturday</div>
+                    </div>
+                    <div class="shift day-shift color-dannie">
+                        <div class="shift-label">Day (8am-8pm)</div>
+                        <div class="shift-name color-dannie-font">Dannie</div>
+                    </div>
+                    <div class="shift night-shift color-sweta">
+                        <div class="shift-label">Night (8pm-8am)</div>
+                        <div class="shift-name color-sweta-font">Sweta</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Week C -->
+        <div class="week-section">
+            <div class="week-header">
+                <h2>Week C | Nov 16th - 22nd</h2>
+            </div>
+            <div class="calendar-grid">
+                <div class="day-card">
+                    <div class="day-header">
+                        <div class="day-name">Sunday</div>
+                    </div>
+                    <div class="shift day-shift color-dannie">
+                        <div class="shift-label">Day (8am-8pm)</div>
+                        <div class="shift-name color-dannie-font">Dannie</div>
+                    </div>
+                    <div class="shift night-shift color-marie">
+                        <div class="shift-label">Night (8pm-8am)</div>
+                        <div class="shift-name color-marie-font">Marie</div>
+                    </div>
+                </div>
+                
+                <div class="day-card">
+                    <div class="day-header">
+                        <div class="day-name">Monday</div>
+                    </div>
+                    <div class="shift day-shift color-dannie">
+                        <div class="shift-label">Day (8am-8pm)</div>
+                        <div class="shift-name color-dannie-font">Dannie</div>
+                    </div>
+                    <div class="shift night-shift color-marie">
+                        <div class="shift-label">Night (8pm-8am)</div>
+                        <div class="shift-name color-marie-font">Marie</div>
+                    </div>
+                </div>
+                
+                <div class="day-card">
+                    <div class="day-header">
+                        <div class="day-name">Tuesday</div>
+                    </div>
+                    <div class="shift day-shift color-dannie">
+                        <div class="shift-label">Day (8am-8pm)</div>
+                        <div class="shift-name color-dannie-font">Dannie</div>
+                    </div>
+                    <div class="shift night-shift color-marie">
+                        <div class="shift-label">Night (8pm-8am)</div>
+                        <div class="shift-name color-marie-font">Marie</div>
+                    </div>
+                </div>
+                
+                <div class="day-card">
+                    <div class="day-header">
+                        <div class="day-name">Wednesday</div>
+                    </div>
+                    <div class="shift day-shift color-dannie">
+                        <div class="shift-label">Day (8am-8pm)</div>
+                        <div class="shift-name color-dannie-font">Dannie</div>
+                    </div>
+                    <div class="shift night-shift color-marie">
+                        <div class="shift-label">Night (8pm-8am)</div>
+                        <div class="shift-name color-marie-font">Marie</div>
+                    </div>
+                </div>
+                
+                <div class="day-card">
+                    <div class="day-header">
+                        <div class="day-name">Thursday</div>
+                    </div>
+                    <div class="shift day-shift color-netsie">
+                        <div class="shift-label">Day (8am-8pm)</div>
+                        <div class="shift-name color-netsie-font">Netsie</div>
+                    </div>
+                    <div class="shift night-shift color-sweta">
+                        <div class="shift-label">Night (8pm-8am)</div>
+                        <div class="shift-name color-sweta-font">Sweta</div>
+                    </div>
+                </div>
+                
+                <div class="day-card">
+                    <div class="day-header">
+                        <div class="day-name">Friday</div>
+                    </div>
+                    <div class="shift day-shift color-dannie">
+                        <div class="shift-label">Day (8am-8pm)</div>
+                        <div class="shift-name color-dannie-font">Dannie</div>
+                    </div>
+                    <div class="shift night-shift color-hana">
+                        <div class="shift-label">Night (8pm-8am)</div>
+                        <div class="shift-name color-hana-font">Hana</div>
+                    </div>
+                </div>
+                
+                <div class="day-card">
+                    <div class="day-header">
+                        <div class="day-name">Saturday</div>
+                    </div>
+                    <div class="shift day-shift color-dannie">
+                        <div class="shift-label">Day (8am-8pm)</div>
+                        <div class="shift-name color-dannie-font">Dannie</div>
+                    </div>
+                    <div class="shift night-shift color-sweta">
+                        <div class="shift-label">Night (8pm-8am)</div>
+                        <div class="shift-name color-sweta-font">Sweta</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Week D -->
+        <div class="week-section">
+            <div class="week-header">
+                <h2>Week D | Nov 23rd - 29th</h2>
+            </div>
+            <div class="calendar-grid">
+                <div class="day-card">
+                    <div class="day-header">
+                        <div class="day-name">Sunday</div>
+                    </div>
+                    <div class="shift day-shift color-dannie">
+                        <div class="shift-label">Day (8am-8pm)</div>
+                        <div class="shift-name color-dannie-font">Dannie</div>
+                    </div>
+                    <div class="shift night-shift color-nate">
+                        <div class="shift-label">Night (8pm-8am)</div>
+                        <div class="shift-name color-nate-font">Nate</div>
+                    </div>
+                </div>
+                
+                <div class="day-card">
+                    <div class="day-header">
+                        <div class="day-name">Monday</div>
+                    </div>
+                    <div class="shift day-shift color-christine">
+                        <div class="shift-label">Day (8am-8pm)</div>
+                        <div class="shift-name color-christine-font">Christine</div>
+                    </div>
+                    <div class="shift night-shift color-marie">
+                        <div class="shift-label">Night (8pm-8am)</div>
+                        <div class="shift-name color-marie-font">Marie</div>
+                    </div>
+                </div>
+                
+                <div class="day-card">
+                    <div class="day-header">
+                        <div class="day-name">Tuesday</div>
+                    </div>
+                    <div class="shift day-shift color-dannie">
+                        <div class="shift-label">Day (8am-8pm)</div>
+                        <div class="shift-name color-dannie-font">Dannie</div>
+                    </div>
+                    <div class="shift night-shift color-marie">
+                        <div class="shift-label">Night (8pm-8am)</div>
+                        <div class="shift-name color-marie-font">Marie</div>
+                    </div>
+                </div>
+                
+                <div class="day-card">
+                    <div class="day-header">
+                        <div class="day-name">Wednesday</div>
+                    </div>
+                    <div class="shift day-shift color-dannie">
+                        <div class="shift-label">Day (8am-8pm)</div>
+                        <div class="shift-name color-dannie-font">Dannie</div>
+                    </div>
+                    <div class="shift night-shift color-marie">
+                        <div class="shift-label">Night (8pm-8am)</div>
+                        <div class="shift-name color-marie-font">Marie</div>
+                    </div>
+                </div>
+                
+                <div class="day-card">
+                    <div class="day-header">
+                        <div class="day-name">Thursday</div>
+                    </div>
+                    <div class="shift day-shift">
+                        <div class="shift-label">Day off</div>
+                        <div class="shift-name">NO WORK</div>
+                    </div>
+                    <div class="shift night-shift">
+                        <div class="shift-label">Night off</div>
+                        <div class="shift-name">HOLIDAY</div>
+                    </div>
+                    <div class="day-header">
+                        <div class="day-name">Notes</div>
+                        <p>No shifts today due to Thanksgiving holiday. Vicki will spend the day and night with Ryn.</p>
+                    </div>
+                </div>
+                
+                <div class="day-card">
+                    <div class="day-header">
+                        <div class="day-name">Friday</div>
+                    </div>
+                    <div class="shift day-shift color-dannie">
+                        <div class="shift-label">Day (8am-8pm)</div>
+                        <div class="shift-name color-dannie-font">Dannie</div>
+                    </div>
+                    <div class="shift night-shift color-hana">
+                        <div class="shift-label">Night (8pm-8am)</div>
+                        <div class="shift-name color-hana-font">Hana</div>
+                    </div>
+                </div>
+                
+                <div class="day-card">
+                    <div class="day-header">
+                        <div class="day-name">Saturday</div>
+                    </div>
+                    <div class="shift day-shift color-dannie">
+                        <div class="shift-label">Day (8am-8pm)</div>
+                        <div class="shift-name color-dannie-font">Dannie</div>
+                    </div>
+                    <div class="shift night-shift color-sweta">
+                        <div class="shift-label">Night (8pm-8am)</div>
+                        <div class="shift-name color-sweta-font">Sweta</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Legend -->
+        <!-- <div class="legend">
+            <div class="legend-item">
+                <div class="legend-color color-dannie"></div>
+                <span><strong>Dannie</strong></span>
+            </div>
+            <div class="legend-item">
+                <div class="legend-color color-marie"></div>
+                <span><strong>Marie</strong></span>
+            </div>
+            <div class="legend-item">
+                <div class="legend-color color-netsie"></div>
+                <span><strong>Netsie</strong></span>
+            </div>
+            <div class="legend-item">
+                <div class="legend-color color-sweta"></div>
+                <span><strong>Sweta</strong></span>
+            </div>
+            <div class="legend-item">
+                <div class="legend-color color-hana"></div>
+                <span><strong>Hana</strong></span>
+            </div>
+            <div class="legend-item">
+                <div class="legend-color color-nate"></div>
+                <span><strong>Nate</strong></span>
+            </div>
+            <div class="legend-item">
+                <div class="legend-color color-christine"></div>
+                <span><strong>Christine</strong></span>
+            </div>
+        </div>
+    </div> -->
+
+    <!-- <button class="print-button" onclick="window.print()">🖨️ Print Schedule</button> -->
+</body>
+</html>
